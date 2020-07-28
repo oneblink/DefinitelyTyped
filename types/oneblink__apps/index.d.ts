@@ -8,26 +8,26 @@ interface OneBlinkAppsTenant {
     apiOrigin: string;
     loginDomain: string;
 }
-type NoV = null | void;
+type NoU = null | undefined;
 interface UserProfile {
     isSAMLUser: boolean;
     providerType: string;
     providerUserId: string;
     userId: string;
     username: string;
-    email: string | NoV;
-    firstName: string | NoV;
-    lastName: string | NoV;
-    fullName: string | NoV;
-    picture: string | NoV;
-    role: string | NoV;
+    email: string | NoU;
+    firstName: string | NoU;
+    lastName: string | NoU;
+    fullName: string | NoU;
+    picture: string | NoU;
+    role: string | NoU;
     supervisor:
         | {
-              fullName: string | NoV;
-              email: string | NoV;
-              providerUserId: string | NoV;
+              fullName: string | NoU;
+              email: string | NoU;
+              providerUserId: string | NoU;
           }
-        | NoV;
+        | NoU;
 }
 declare namespace offlineService {
     function isOffline(): boolean;
@@ -42,13 +42,13 @@ declare namespace authService {
         },
     ): void;
     function getUserFriendlyName(): string | null;
-    function getIssuerFromJWT(jwt: string | null | void): string | void;
+    function getIssuerFromJWT(jwt: string | NoU): string | void;
     function isAuthorised(formsAppId: number): Promise<boolean>;
     function requestAccess(formsAppId: number): Promise<void>;
     function login(): Promise<string>;
     function handleAuthentication(): Promise<string>;
     function isLoggedIn(): boolean;
-    function getIdToken(): Promise<string | void>;
+    function getIdToken(): Promise<string | undefined>;
     function getUserProfile(): UserProfile | null;
     function logout(): Promise<void>;
 }
