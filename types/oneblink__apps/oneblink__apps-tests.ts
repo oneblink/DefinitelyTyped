@@ -6,16 +6,10 @@ const isOffline: boolean = offlineService.isOffline();
 // AUTH SERVICE
 const testAuthService = async () => {
     const formsAppId = 4;
-    authService.init(
-        {
-            apiOrigin: 'https://my-api.com',
-            loginDomain: 'https://my-login-domain.com',
-        },
-        {
-            oAuthClientId: 'oAuthId',
-            useSAML: true,
-        },
-    );
+    authService.init({
+        oAuthClientId: 'oAuthId',
+        useSAML: true,
+    });
     const userName = authService.getUserFriendlyName();
 
     if (!!userName) {

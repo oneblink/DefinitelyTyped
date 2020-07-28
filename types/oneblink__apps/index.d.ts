@@ -4,10 +4,6 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 3.9
 
-interface OneBlinkAppsTenant {
-    apiOrigin: string;
-    loginDomain: string;
-}
 type NoU = null | undefined;
 interface UserProfile {
     isSAMLUser: boolean;
@@ -34,13 +30,7 @@ declare namespace offlineService {
 }
 
 declare namespace authService {
-    function init(
-        tenant: OneBlinkAppsTenant,
-        options: {
-            oAuthClientId: string;
-            useSAML: boolean;
-        },
-    ): void;
+    function init(options: { oAuthClientId: string; useSAML: boolean }): void;
     function getUserFriendlyName(): string | null;
     function getIssuerFromJWT(jwt: string | NoU): string | void;
     function isAuthorised(formsAppId: number): Promise<boolean>;
