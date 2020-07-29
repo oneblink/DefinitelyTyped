@@ -48,7 +48,7 @@ const testAuthService = async () => {
 // ONEBLINK APPS ERROR
 const testOneBlinkAppsError = () => {
     // With no options
-    const errWithNoOptions = new OneBlinkAppsError('My New OneBlink Error', {});
+    const errWithNoOptions = new OneBlinkAppsError('My New OneBlink Error');
 
     // With no options
     const errWithOptions = new OneBlinkAppsError('My New OneBlink Error', {

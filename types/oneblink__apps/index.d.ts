@@ -53,7 +53,7 @@ declare class OneBlinkAppsError extends Error {
 
     constructor(
         message: string,
-        options: {
+        options?: {
             title?: string;
             isOffline?: boolean;
             requiresAccessRequest?: boolean;
