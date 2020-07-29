@@ -120,6 +120,8 @@ declare namespace prefillService {
     } | null>;
 }
 
+declare function useTenantCivicPlus(): void;
+declare function useTenantOneBlink(): void;
 export {
     offlineService,
     authService,
@@ -129,4 +131,6 @@ export {
     OneBlinkAppsError,
     FormTypes,
     SubmissionEventTypes,
+    useTenantCivicPlus,
+    useTenantOneBlink,
 };
