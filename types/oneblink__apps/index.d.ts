@@ -65,7 +65,7 @@ declare class OneBlinkAppsError extends Error {
     );
 }
 declare namespace draftService {
-    function registerDraftsListener(listener: (drafts: FormTypes.FormsAppDraft[]) => unknown): void;
+    function registerDraftsListener(listener: (drafts: FormTypes.FormsAppDraft[]) => unknown): () => void;
     function addDraft(
         newDraft: FormTypes.NewFormsAppDraft,
         draftSubmission: FormTypes.FormSubmissionResult,

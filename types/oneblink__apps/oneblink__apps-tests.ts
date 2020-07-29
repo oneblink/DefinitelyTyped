@@ -93,9 +93,10 @@ const testDraftService = async () => {
             draftDataId: 'draftDataId',
         },
     ];
-    draftService.registerDraftsListener(formsAppDrafts => {
+    const cancelListener = draftService.registerDraftsListener(formsAppDrafts => {
         return null;
     });
+    cancelListener();
 
     const form = {
         description: 'desc',
