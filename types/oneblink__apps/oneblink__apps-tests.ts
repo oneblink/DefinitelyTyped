@@ -1,4 +1,12 @@
-import { offlineService, authService, OneBlinkAppsError, draftService, FormTypes } from '@oneblink/apps';
+import {
+    offlineService,
+    authService,
+    OneBlinkAppsError,
+    draftService,
+    paymentService,
+    FormTypes,
+    SubmissionEventTypes,
+} from '@oneblink/apps';
 
 // OFFLINE SERVICE
 const isOffline: boolean = offlineService.isOffline();
@@ -81,6 +89,55 @@ const testOneBlinkAppsError = () => {
 };
 
 // DRAFT SERVICE
+const form = {
+    description: 'desc',
+    elements: [],
+    formsAppEnvironmentId: 4,
+    formsAppIds: [4, 2],
+    id: 2,
+    isAuthenticated: true,
+    isInfoPage: true,
+    isMultiPage: true,
+    name: 'name',
+    organisationId: 'orgid',
+    postSubmissionAction: 'URL' as const,
+    submissionEvents: [],
+    tags: ['tag'],
+    publishEndDate: null,
+    publishStartDate: null,
+};
+const newFormsAppDraft = {
+    title: 'draftTitle',
+    formId: 4,
+    externalId: null,
+    jobId: undefined,
+};
+const formSubmissionResult = {
+    draftId: '4',
+    externalId: 's',
+    formsAppId: 3,
+    jobId: 'sd',
+    payment: {
+        hostedFormUrl: 'sasds',
+        submissionEvent: {
+            isDraft: false,
+            type: 'CP_PAY' as const,
+            configuration: {
+                elementId: 'elementid',
+                gatewayId: 'sasds',
+            },
+        },
+    },
+    submissionTimestamp: 'date',
+    preFillFormDataId: 'sasds',
+    submission: {
+        key: {},
+        otherKey: 'sasd',
+    },
+    submissionId: '23',
+    definition: form,
+};
+
 const testDraftService = async () => {
     const formsAppDrafts: FormTypes.FormsAppDraft[] = [
         {
@@ -98,54 +155,6 @@ const testDraftService = async () => {
     });
     cancelListener();
 
-    const form = {
-        description: 'desc',
-        elements: [],
-        formsAppEnvironmentId: 4,
-        formsAppIds: [4, 2],
-        id: 2,
-        isAuthenticated: true,
-        isInfoPage: true,
-        isMultiPage: true,
-        name: 'name',
-        organisationId: 'orgid',
-        postSubmissionAction: 'URL' as const,
-        submissionEvents: [],
-        tags: ['tag'],
-        publishEndDate: null,
-        publishStartDate: null,
-    };
-    const newFormsAppDraft = {
-        title: 'draftTitle',
-        formId: 4,
-        externalId: null,
-        jobId: undefined,
-    };
-    const formSubmissionResult = {
-        draftId: '4',
-        externalId: 's',
-        formsAppId: 3,
-        jobId: 'sd',
-        payment: {
-            hostedFormUrl: 'sasds',
-            submissionEvent: {
-                isDraft: false,
-                type: 'CP_PAY' as const,
-                configuration: {
-                    elementId: 'elementid',
-                    gatewayId: 'sasds',
-                },
-            },
-        },
-        submissionTimestamp: 'date',
-        preFillFormDataId: 'sasds',
-        submission: {
-            key: {},
-            otherKey: 'sasd',
-        },
-        submissionId: '23',
-        definition: form,
-    };
     const accessKey = 'accessKey';
     await draftService.addDraft(newFormsAppDraft, formSubmissionResult, accessKey);
 
@@ -193,4 +202,86 @@ const testDraftService = async () => {
         formsAppId: 4,
         throwError: true,
     });
+};
+
+// PAYMENT SERVICE
+const testPaymentService = async () => {
+    let bool: boolean;
+    let num: number;
+    let str: string;
+    const { transaction, submissionResult } = await paymentService.handlePaymentQuerystring({
+        val1: 'string',
+        val2: [2, 3, 4],
+        val3: ['1', '2'],
+    });
+
+    const isSuccess: boolean = transaction.isSuccess;
+    const { amount, creditCardMask, id, errorMessage } = transaction;
+    num = amount || 4;
+
+    if (creditCardMask && id && errorMessage) {
+        str = creditCardMask;
+        str = id;
+        str = errorMessage;
+    }
+
+    const result = await paymentService.handlePaymentSubmissionEvent(formSubmissionResult, {
+        isDraft: false,
+        type: 'CP_PAY',
+        configuration: {
+            elementId: 'elementid',
+            gatewayId: 'sasds',
+        },
+    });
+    if (result) {
+        const {
+            draftId,
+            externalId,
+            jobId,
+            definition,
+            formsAppId,
+            payment,
+            submissionId,
+            submission,
+            preFillFormDataId,
+            submissionTimestamp,
+            isOffline,
+            captchaTokens,
+            isInPendingQueue,
+            keyId,
+        } = result;
+        const formDef: FormTypes.Form = definition;
+        num = formsAppId;
+        if (payment) {
+            str = payment.hostedFormUrl;
+            bool = payment.submissionEvent.isDraft;
+            str = payment.submissionEvent.type;
+            if (payment.submissionEvent.type === 'CP_PAY') {
+                const { elementId, gatewayId } = payment.submissionEvent.configuration;
+                str = elementId;
+                str = gatewayId;
+            } else {
+                const { elementId, environmentId } = payment.submissionEvent.configuration;
+                str = elementId;
+                str = environmentId;
+            }
+        }
+        const val = submission.someKey;
+        bool = isOffline || false;
+        if (captchaTokens) {
+            for (const token of captchaTokens) {
+                str = token;
+            }
+        }
+        bool = isInPendingQueue || false;
+        if (draftId && externalId && jobId && submissionId && preFillFormDataId && submissionTimestamp && keyId) {
+            str = draftId;
+            str = externalId;
+            str = jobId;
+            str = submissionId;
+            str = preFillFormDataId;
+            str = submissionTimestamp;
+            str = keyId;
+        }
+    }
 };
