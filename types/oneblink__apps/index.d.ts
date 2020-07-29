@@ -107,7 +107,7 @@ declare namespace paymentService {
     function handlePaymentSubmissionEvent(
         submissionResult: FormTypes.FormSubmissionResult,
         paymentSubmissionEvent: SubmissionEventTypes.PaymentSubmissionEvent,
-    ): Promise<FormTypes.FormSubmissionResult | void>;
+    ): Promise<FormTypes.FormSubmissionResult | undefined>;
 }
 export {
     offlineService,
