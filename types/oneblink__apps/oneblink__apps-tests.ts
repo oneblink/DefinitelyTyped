@@ -1,4 +1,4 @@
-import { offlineService, authService } from '@oneblink/apps';
+import { offlineService, authService, OneBlinkAppsError, draftService, FormTypes } from '@oneblink/apps';
 
 // OFFLINE SERVICE
 const isOffline: boolean = offlineService.isOffline();
@@ -43,4 +43,154 @@ const testAuthService = async () => {
         }
     }
     await authService.logout();
+};
+
+// ONEBLINK APPS ERROR
+const testOneBlinkAppsError = () => {
+    // With no options
+    const errWithNoOptions = new OneBlinkAppsError('My New OneBlink Error');
+
+    // With options
+    const errWithOptions = new OneBlinkAppsError('My New OneBlink Error', {
+        title: 'Something',
+        isOffline: true,
+        requiresAccessRequest: true,
+        requiresLogin: true,
+        httpStatusCode: 401,
+        originalError: errWithNoOptions,
+    });
+
+    const {
+        title,
+        httpStatusCode,
+        isOffline,
+        requiresAccessRequest,
+        requiresLogin,
+        originalError,
+        message,
+    } = errWithOptions;
+    const titleString: string = title;
+    const httpStatusCodeNum: number = httpStatusCode || 400;
+    const isOfflineBool: boolean = isOffline;
+    const requiresAccessRequestBool: boolean = requiresAccessRequest;
+    const requiresLoginBool: boolean = requiresLogin;
+    const thirdError = new OneBlinkAppsError('third', {
+        originalError,
+    });
+    const messageString: string = message;
+};
+
+// DRAFT SERVICE
+const testDraftService = async () => {
+    const formsAppDrafts: FormTypes.FormsAppDraft[] = [
+        {
+            draftId: '2',
+            externalId: 's',
+            formId: 4,
+            jobId: 'sasd',
+            title: 'title',
+            updatedAt: 'date',
+            draftDataId: 'draftDataId',
+        },
+    ];
+    const cancelListener = draftService.registerDraftsListener(formsAppDrafts => {
+        return null;
+    });
+    cancelListener();
+
+    const form = {
+        description: 'desc',
+        elements: [],
+        formsAppEnvironmentId: 4,
+        formsAppIds: [4, 2],
+        id: 2,
+        isAuthenticated: true,
+        isInfoPage: true,
+        isMultiPage: true,
+        name: 'name',
+        organisationId: 'orgid',
+        postSubmissionAction: 'URL' as const,
+        submissionEvents: [],
+        tags: ['tag'],
+        publishEndDate: null,
+        publishStartDate: null,
+    };
+    const newFormsAppDraft = {
+        title: 'draftTitle',
+        formId: 4,
+        externalId: null,
+        jobId: undefined,
+    };
+    const formSubmissionResult = {
+        draftId: '4',
+        externalId: 's',
+        formsAppId: 3,
+        jobId: 'sd',
+        payment: {
+            hostedFormUrl: 'sasds',
+            submissionEvent: {
+                isDraft: false,
+                type: 'CP_PAY' as const,
+                configuration: {
+                    elementId: 'elementid',
+                    gatewayId: 'sasds',
+                },
+            },
+        },
+        submissionTimestamp: 'date',
+        preFillFormDataId: 'sasds',
+        submission: {
+            key: {},
+            otherKey: 'sasd',
+        },
+        submissionId: '23',
+        definition: form,
+    };
+    const accessKey = 'accessKey';
+    await draftService.addDraft(newFormsAppDraft, formSubmissionResult, accessKey);
+
+    await draftService.updateDraft(
+        {
+            ...newFormsAppDraft,
+            draftId: 'id1',
+            draftDataId: 'id2',
+            updatedAt: 'date',
+        },
+        formSubmissionResult,
+        accessKey,
+    );
+
+    const drafts = await draftService.getDrafts();
+    for (const draft of drafts) {
+        const { draftDataId, draftId, externalId, formId, jobId, title, updatedAt } = draft;
+        let str: string = draftId;
+        const num: number = formId;
+        str = title;
+        str = updatedAt;
+        if (draftDataId && externalId && jobId) {
+            str = draftDataId;
+            str = externalId;
+            str = jobId;
+        }
+    }
+
+    const result = await draftService.getDraftAndData('34');
+    const draftId: string | undefined = result?.draft.draftId;
+    if (result) {
+        const { draftId, externalId, jobId, formId, title, updatedAt, draftDataId } = result.draft;
+        let str: string = draftId;
+        const num: number = formId;
+        str = title;
+        str = updatedAt;
+        if (draftDataId && externalId && jobId) {
+            str = draftDataId;
+            str = externalId;
+            str = jobId;
+        }
+    }
+    await draftService.deleteDraft('id', 5);
+    await draftService.syncDrafts({
+        formsAppId: 4,
+        throwError: true,
+    });
 };

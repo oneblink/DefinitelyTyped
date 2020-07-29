@@ -4,7 +4,8 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 3.9
 
-type NoU = null | undefined;
+import type { NoU } from './types/misc';
+import * as FormTypes from './types/forms';
 interface UserProfile {
     isSAMLUser: boolean;
     providerType: string;
@@ -43,4 +44,47 @@ declare namespace authService {
     function logout(): Promise<void>;
 }
 
-export { offlineService, authService };
+declare class OneBlinkAppsError extends Error {
+    title: string;
+    isOffline: boolean;
+    requiresAccessRequest: boolean;
+    requiresLogin: boolean;
+    httpStatusCode: number | undefined;
+    originalError: Error | undefined;
+
+    constructor(
+        message: string,
+        options?: {
+            title?: string;
+            isOffline?: boolean;
+            requiresAccessRequest?: boolean;
+            requiresLogin?: boolean;
+            httpStatusCode?: number;
+            originalError?: Error;
+        },
+    );
+}
+declare namespace draftService {
+    function registerDraftsListener(listener: (drafts: FormTypes.FormsAppDraft[]) => unknown): () => void;
+    function addDraft(
+        newDraft: FormTypes.NewFormsAppDraft,
+        draftSubmission: FormTypes.FormSubmissionResult,
+        accessKey: NoU | string,
+    ): Promise<void>;
+    function updateDraft(
+        draft: FormTypes.FormsAppDraft,
+        draftSubmission: FormTypes.FormSubmissionResult,
+        accessKey: NoU | string,
+    ): Promise<void>;
+    function getDrafts(): Promise<FormTypes.FormsAppDraft[]>;
+    function getDraftAndData(
+        draftId: NoU | string,
+    ): Promise<{
+        draft: FormTypes.FormsAppDraft;
+        draftData: { [key: string]: unknown };
+    } | null>;
+    function deleteDraft(draftId: string, formsAppId: number): Promise<void>;
+    function syncDrafts(options: { formsAppId: number; throwError?: boolean }): Promise<void>;
+}
+
+export { offlineService, authService, draftService, OneBlinkAppsError, FormTypes };
