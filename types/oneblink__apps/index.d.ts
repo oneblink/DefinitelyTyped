@@ -6,6 +6,7 @@
 
 import type { NoU } from './types/misc';
 import * as FormTypes from './types/forms';
+import * as SubmissionEventTypes from './types/submissionEvents';
 interface UserProfile {
     isSAMLUser: boolean;
     providerType: string;
@@ -87,4 +88,33 @@ declare namespace draftService {
     function syncDrafts(options: { formsAppId: number; throwError?: boolean }): Promise<void>;
 }
 
-export { offlineService, authService, draftService, OneBlinkAppsError, FormTypes };
+interface QueryParameters {
+    [property: string]: string | Array<string | number> | null;
+}
+declare namespace paymentService {
+    function handlePaymentQuerystring(
+        query: QueryParameters,
+    ): Promise<{
+        transaction: {
+            isSuccess: boolean;
+            errorMessage: string | NoU;
+            id: string | NoU;
+            creditCardMask: string | NoU;
+            amount: number | NoU;
+        };
+        submissionResult: FormTypes.FormSubmissionResult;
+    }>;
+    function handlePaymentSubmissionEvent(
+        submissionResult: FormTypes.FormSubmissionResult,
+        paymentSubmissionEvent: SubmissionEventTypes.PaymentSubmissionEvent,
+    ): Promise<FormTypes.FormSubmissionResult | undefined>;
+}
+export {
+    offlineService,
+    authService,
+    draftService,
+    paymentService,
+    OneBlinkAppsError,
+    FormTypes,
+    SubmissionEventTypes,
+};
