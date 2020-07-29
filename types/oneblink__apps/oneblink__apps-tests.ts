@@ -6,6 +6,7 @@ import {
     paymentService,
     FormTypes,
     SubmissionEventTypes,
+    prefillService,
 } from '@oneblink/apps';
 
 // OFFLINE SERVICE
@@ -283,5 +284,21 @@ const testPaymentService = async () => {
             str = submissionTimestamp;
             str = keyId;
         }
+    }
+};
+
+// PREFILL SERVICE
+const testPrefillService = async () => {
+    let str: string;
+    let num: number;
+    const result = await prefillService.getPrefillFormData(24, 'prefillId');
+    if (result) {
+        const data = result as {
+            name: string;
+            age: number;
+        };
+        str = data.name;
+        num = data.age;
+        await prefillService.removePrefillFormData(str);
     }
 };
