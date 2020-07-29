@@ -50,7 +50,7 @@ const testOneBlinkAppsError = () => {
     // With no options
     const errWithNoOptions = new OneBlinkAppsError('My New OneBlink Error');
 
-    // With no options
+    // With options
     const errWithOptions = new OneBlinkAppsError('My New OneBlink Error', {
         title: 'Something',
         isOffline: true,
