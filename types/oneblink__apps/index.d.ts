@@ -109,11 +109,23 @@ declare namespace paymentService {
         paymentSubmissionEvent: SubmissionEventTypes.PaymentSubmissionEvent,
     ): Promise<FormTypes.FormSubmissionResult | undefined>;
 }
+
+declare namespace prefillService {
+    function removePrefillFormData(prefillFormDataId: string): Promise<void>;
+    function getPrefillFormData(
+        formId: number,
+        prefillFormDataId: string | NoU,
+    ): Promise<{
+        [property: string]: unknown;
+    } | null>;
+}
+
 export {
     offlineService,
     authService,
     draftService,
     paymentService,
+    prefillService,
     OneBlinkAppsError,
     FormTypes,
     SubmissionEventTypes,
