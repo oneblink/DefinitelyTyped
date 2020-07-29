@@ -1,4 +1,4 @@
-import { offlineService, authService } from '@oneblink/apps';
+import { offlineService, authService, OneBlinkAppsError } from '@oneblink/apps';
 
 // OFFLINE SERVICE
 const isOffline: boolean = offlineService.isOffline();
@@ -43,4 +43,39 @@ const testAuthService = async () => {
         }
     }
     await authService.logout();
+};
+
+// ONEBLINK APPS ERROR
+const testOneBlinkAppsError = () => {
+    // With no options
+    const errWithNoOptions = new OneBlinkAppsError('My New OneBlink Error', {});
+
+    // With no options
+    const errWithOptions = new OneBlinkAppsError('My New OneBlink Error', {
+        title: 'Something',
+        isOffline: true,
+        requiresAccessRequest: true,
+        requiresLogin: true,
+        httpStatusCode: 401,
+        originalError: errWithNoOptions,
+    });
+
+    const {
+        title,
+        httpStatusCode,
+        isOffline,
+        requiresAccessRequest,
+        requiresLogin,
+        originalError,
+        message,
+    } = errWithOptions;
+    const titleString: string = title;
+    const httpStatusCodeNum: number = httpStatusCode || 400;
+    const isOfflineBool: boolean = isOffline;
+    const requiresAccessRequestBool: boolean = requiresAccessRequest;
+    const requiresLoginBool: boolean = requiresLogin;
+    const thirdError = new OneBlinkAppsError('third', {
+        originalError,
+    });
+    const messageString: string = message;
 };

@@ -43,4 +43,25 @@ declare namespace authService {
     function logout(): Promise<void>;
 }
 
-export { offlineService, authService };
+declare class OneBlinkAppsError extends Error {
+    title: string;
+    isOffline: boolean;
+    requiresAccessRequest: boolean;
+    requiresLogin: boolean;
+    httpStatusCode: number | undefined;
+    originalError: Error | undefined;
+
+    constructor(
+        message: string,
+        options: {
+            title?: string;
+            isOffline?: boolean;
+            requiresAccessRequest?: boolean;
+            requiresLogin?: boolean;
+            httpStatusCode?: number;
+            originalError?: Error;
+        },
+    );
+}
+
+export { offlineService, authService, OneBlinkAppsError };
