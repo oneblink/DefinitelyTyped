@@ -7,6 +7,8 @@ import {
     FormTypes,
     SubmissionEventTypes,
     prefillService,
+    useTenantCivicPlus,
+    useTenantOneBlink,
 } from '@oneblink/apps';
 
 // OFFLINE SERVICE
@@ -301,4 +303,10 @@ const testPrefillService = async () => {
         num = data.age;
         await prefillService.removePrefillFormData(str);
     }
+};
+
+// TENANTS
+const testTenants = () => {
+    useTenantOneBlink();
+    useTenantCivicPlus();
 };
