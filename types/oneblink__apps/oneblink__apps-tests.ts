@@ -4,9 +4,10 @@ import {
     OneBlinkAppsError,
     draftService,
     paymentService,
+    prefillService,
+    jobService,
     FormTypes,
     SubmissionEventTypes,
-    prefillService,
     useTenantCivicPlus,
     useTenantOneBlink,
 } from '@oneblink/apps';
@@ -309,4 +310,43 @@ const testPrefillService = async () => {
 const testTenants = () => {
     useTenantOneBlink();
     useTenantCivicPlus();
+};
+
+// JOB SERVICE
+const testJobService = async () => {
+    let str: string;
+    let num: number;
+
+    const result = await jobService.getJobs(4, 'id');
+    for (const job of result) {
+        const { createdAt, formId, details, id, draft, externalId, preFillFormDataId } = job;
+        str = createdAt;
+        str = id;
+        num = formId;
+        if (externalId && preFillFormDataId && draft) {
+            str = externalId;
+            str = preFillFormDataId;
+
+            str = draft.draftId;
+            str = draft.title;
+            str = draft.updatedAt;
+            num = draft.formId;
+            if (draft.draftDataId && draft.externalId && draft.jobId) {
+                str = draft.draftDataId;
+                str = draft.externalId;
+                str = draft.jobId;
+            }
+        }
+
+        const { description, title, type, key, priority } = details;
+        str = title;
+        if (description && type && key && priority) {
+            str = description;
+            str = type;
+            str = key;
+            str = priority;
+        }
+    }
+
+    await jobService.ensurePrefillFormDataExists(result);
 };
