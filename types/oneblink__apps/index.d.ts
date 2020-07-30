@@ -122,12 +122,18 @@ declare namespace prefillService {
 
 declare function useTenantCivicPlus(): void;
 declare function useTenantOneBlink(): void;
+
+declare namespace jobService {
+    function getJobs(formsAppId: number, jobsLabel: string): Promise<FormTypes.FormsAppJob[]>;
+    function ensurePrefillFormDataExists(jobs: FormTypes.FormsAppJob[]): Promise<void>;
+}
 export {
     offlineService,
     authService,
     draftService,
     paymentService,
     prefillService,
+    jobService,
     OneBlinkAppsError,
     FormTypes,
     SubmissionEventTypes,
